@@ -1,4 +1,6 @@
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -149,12 +151,13 @@ body {
   margin-top: 12px;
   text-align: center;
 }
+
 /* =========================
    CHAT MESSAGE HOVERS
 ========================= */
 
 .message {
-  transition: 
+  transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
 }
@@ -165,14 +168,14 @@ body {
 
 /* AI message glow */
 .message.ai:hover {
-  box-shadow: 
+  box-shadow:
     0 0 0 1px rgba(56, 189, 248, 0.15),
     0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 /* User message emphasis */
 .message.user:hover {
-  box-shadow: 
+  box-shadow:
     0 0 0 1px rgba(34, 197, 94, 0.4),
     0 10px 25px rgba(34, 197, 94, 0.25);
 }
@@ -185,12 +188,33 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Chat window specific scrollbar - Adaptable & Scalable */
+.chat-window::-webkit-scrollbar {
+  width: 10px;
+}
+
+.chat-window::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-window::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 20px;
+  border: 2px solid #111827;
+  transition: all 0.2s ease;
+}
+
+.chat-window::-webkit-scrollbar-thumb:hover {
+  background: #22c55e;
+  border-width: 1px;
+}
+
 /* =========================
    INPUT BAR INTERACTIONS
 ========================= */
 
 .chat-input input {
-  transition: 
+  transition:
     box-shadow 0.3s ease,
     background 0.3s ease;
 }
@@ -198,7 +222,7 @@ body {
 .chat-input input:focus {
   outline: none;
   background: #020617;
-  box-shadow: 
+  box-shadow:
     0 0 0 2px rgba(34, 197, 94, 0.35);
 }
 
@@ -207,7 +231,7 @@ body {
 ========================= */
 
 .chat-input button {
-  transition: 
+  transition:
     transform 0.25s ease,
     box-shadow 0.25s ease,
     opacity 0.25s ease;
@@ -224,7 +248,7 @@ body {
 ========================= */
 
 .sidebar a {
-  transition: 
+  transition:
     background 0.3s ease,
     color 0.3s ease,
     transform 0.3s ease;
