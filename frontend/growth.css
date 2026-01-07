@@ -1,0 +1,187 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #020617, #0f172a);
+  color: #e5e7eb;
+}
+
+.navbar {
+  height: 70px;
+  background: #020617;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.logo { color: #22c55e; font-weight: 700; }
+
+.growth-container {
+  display: flex;
+  height: calc(100vh - 70px);
+}
+
+.sidebar {
+  width: 240px;
+  background: #020617;
+  padding: 30px 20px;
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+  background: #22c55e;
+  color: #000;
+}
+
+.growth-main {
+  flex: 1;
+  padding: 40px 50px;
+  overflow-y: auto;
+}
+
+.growth-header {
+  margin-bottom: 30px;
+}
+
+.growth-header h1 {
+  margin-bottom: 8px;
+}
+
+.growth-header p {
+  opacity: 0.75;
+}
+
+.ai-summary {
+  background: linear-gradient(135deg, #020617, #111827);
+  padding: 25px;
+  border-radius: 18px;
+  margin-top: 25px;
+}
+
+.ai-summary h2 {
+  margin-bottom: 15px;
+}
+
+.ai-summary p {
+  line-height: 1.6;
+}
+
+.weekly-plan h2 {
+  margin-bottom: 20px;
+}
+
+.weekly-plan {
+  margin-top: 40px;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.task-card {
+  background: #111827;
+  padding: 25px;
+  border-radius: 20px;
+}
+
+.task-card.high { border-left: 6px solid #ef4444; }
+.task-card.medium { border-left: 6px solid #facc15; }
+.task-card.low { border-left: 6px solid #22c55e; }
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.priority.high { color: #ef4444; }
+.priority.medium { color: #facc15; }
+.priority.low { color: #22c55e; }
+
+.tags span {
+  display: inline-block;
+  background: #020617;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+/* ============================
+   TASK CARD HOVER ANIMATIONS
+   ============================ */
+
+.task-card {
+  transition: 
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    background 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Lift effect */
+.task-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.65);
+  background: linear-gradient(135deg, #0b1220, #111827);
+}
+
+/* Priority glow */
+.task-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.task-card.high:hover::after {
+  box-shadow: inset 6px 0 0 rgba(239, 68, 68, 0.9),
+              0 0 25px rgba(239, 68, 68, 0.35);
+  opacity: 1;
+}
+
+.task-card.medium:hover::after {
+  box-shadow: inset 6px 0 0 rgba(250, 204, 21, 0.9),
+              0 0 25px rgba(250, 204, 21, 0.35);
+  opacity: 1;
+}
+
+.task-card.low:hover::after {
+  box-shadow: inset 6px 0 0 rgba(34, 197, 94, 0.9),
+              0 0 25px rgba(34, 197, 94, 0.35);
+  opacity: 1;
+}
+
+/* Title emphasis */
+.task-card:hover h3 {
+  transform: translateX(2px);
+  transition: transform 0.35s ease;
+}
+
+/* Tag animation */
+.tags span {
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.task-card:hover .tags span {
+  transform: translateY(-2px);
+  background: #020617;
+}

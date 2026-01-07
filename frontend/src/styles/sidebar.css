@@ -1,0 +1,26 @@
+.sidebar {
+  width: 240px;
+  background: #020617;
+  padding: 30px 20px;
+}
+
+.sidebar h3 {
+  color: #38bdf8;
+  margin-bottom: 25px;
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: #e5e7eb;
+  transition: 0.3s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #22c55e;
+  color: #000;
+}
