@@ -93,3 +93,101 @@ body {
 .actions {
   margin-top: 20px;
 }
+
+.fundraising-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pitch-form {
+  background: #111827;
+  padding: 25px;
+  border-radius: 20px;
+  margin: 30px 0;
+  max-width: 600px;
+}
+
+.pitch-form input,
+.pitch-form textarea {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #020617;
+  border: none;
+  color: #e5e7eb;
+}
+
+.pitch-form textarea {
+  min-height: 90px;
+}
+
+.needs {
+  margin-top: 15px;
+}
+
+.tag {
+  display: inline-block;
+  background: #020617;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin: 6px 6px 0 0;
+  cursor: pointer;
+}
+
+.tag.active {
+  background: #22c55e;
+  color: #000;
+}
+
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.pitch-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+.social-preview {
+  margin-top: 40px;
+}
+
+.social-card {
+  background: linear-gradient(135deg, #020617, #111827);
+  padding: 30px;
+  border-radius: 22px;
+  max-width: 400px;
+}
+
+.social-card .cta {
+  margin-top: 15px;
+  font-weight: 600;
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn.danger {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btn.danger:hover {
+  opacity: 0.9;
+}
+
+.social-card {
+  background: linear-gradient(135deg, #020617, #111827);
+  padding: 32px;
+  border-radius: 24px;
+  max-width: 420px;
+  color: #e5e7eb;
+}
