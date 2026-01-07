@@ -49,13 +49,49 @@ const Content = () => {
     setError(null)
 
     try {
-      // Call backend API
+      // Get business context from localStorage
+      const businessContext = {
+        businessType: localStorage.getItem('businessType') || 'Small Business',
+        budget: localStorage.getItem('budget') || '₹0 – ₹2,000',
+        time: localStorage.getItem('time') || 'Less than 30 minutes',
+        team: localStorage.getItem('team') || 'Solo',
+        goal: localStorage.getItem('goal') || 'Increase Sales'
+      }
+
+      // Determine task mode based on message content
+      let taskMode = { mode: 'GENERAL', objective: 'Provide helpful business advice', guidelines: 'Be supportive and realistic' }
+      
+      if (message.toLowerCase().includes('marketing') || message.toLowerCase().includes('promote')) {
+        taskMode = {
+          mode: 'MARKETING',
+          objective: 'Generate simple marketing strategies',
+          guidelines: 'Focus on free/low-cost marketing tactics that can be done solo'
+        }
+      } else if (message.toLowerCase().includes('content') || message.toLowerCase().includes('post')) {
+        taskMode = {
+          mode: 'CONTENT',
+          objective: 'Create content ideas and suggestions',
+          guidelines: 'Provide specific, actionable content ideas that require no special tools'
+        }
+      } else if (message.toLowerCase().includes('customer') || message.toLowerCase().includes('engagement')) {
+        taskMode = {
+          mode: 'ENGAGEMENT',
+          objective: 'Improve customer engagement and retention',
+          guidelines: 'Suggest personal, authentic ways to connect with customers'
+        }
+      }
+
+      // Call backend API with business context and task mode
       const response = await fetch('http://localhost:5000/api/generate-content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message })
+        body: JSON.stringify({ 
+          message,
+          businessContext,
+          taskMode
+        })
       })
 
       const data = await response.json()
