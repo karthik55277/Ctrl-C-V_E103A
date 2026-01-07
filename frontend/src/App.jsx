@@ -8,6 +8,7 @@ import Content from './pages/Content'
 import Engagement from './pages/Engagement'
 import Performance from './pages/Performance'
 import Fundraising from './pages/Fundraising'
+import ImageAssistant from './pages/ImageAssistant'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/engagement" element={<Engagement />} />
         <Route path="/performance" element={<Performance />} />
         <Route path="/fundraising" element={<Fundraising />} />
+        <Route path="/image-assistant" element={<ImageAssistant />} />
       </Routes>
     </Router>
   )
