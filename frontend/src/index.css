@@ -2,13 +2,54 @@
   box-sizing: border-box;
 }
 
+/* UNIVERSAL SCROLLBAR STYLING */
+html,
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   background: #0f172a;
   color: #e5e7eb;
+  scroll-behavior: smooth;
 }
 
 #root {
   min-height: 100vh;
+}
+
+/* UNIVERSAL SCROLLBAR STYLING - PREMIUM & ADAPTABLE */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 20px;
+  border: 4px solid #020617;
+  /* Creates a "floating" look */
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #22c55e;
+  border-width: 2px;
+  /* Makes it look like it's growing/scaling */
+}
+
+/* Firefox scrollbar support */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #1e293b #020617;
+}
+
+/* Ensure global scroll behavior is smooth */
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+  /* Prevents layout shift when scrollbar appears */
 }

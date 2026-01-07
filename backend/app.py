@@ -27,12 +27,13 @@ def health():
 
 @app.route('/api/generate-content', methods=['POST'])
 def generate_content():
-    """Generate content using Gemini AI"""
+    """Generate content using Gemini AI with strict workflow support"""
     try:
         data = request.json
         user_message = data.get('message', '')
         business_context = data.get('businessContext', {})
         task_mode = data.get('taskMode', {})
+        history = data.get('history', [])
         
         if not user_message:
             return jsonify({'error': 'Message is required'}), 400
@@ -43,94 +44,59 @@ def generate_content():
                 'message': 'Please configure GEMINI_API_KEY in your .env file'
             }), 500
         
-        # Extract business context with defaults
+        # Extract business context defaults
         business_type = business_context.get('businessType', 'Small Business')
         budget = business_context.get('budget', '₹0 – ₹2,000')
-        time_per_day = business_context.get('time', 'Less than 30 minutes')
-        team_size = business_context.get('team', 'Solo')
         goal = business_context.get('goal', 'Increase Sales')
         
-        # Extract task mode with defaults
         intent_mode = task_mode.get('mode', 'GENERAL')
-        intent_objective = task_mode.get('objective', 'Provide helpful business advice')
-        intent_guidelines = task_mode.get('guidelines', 'Be supportive and realistic')
         
-        # Define constraint rules based on context
-        constraint_rules = f"""
-- Budget Limit: {budget} per month - suggest only free or very low-cost actions
-- Time Limit: {time_per_day} daily - suggest quick, efficient tasks
-- Team Size: {team_size} - suggest only what this team size can handle
-- Skill Level: Beginner - avoid technical solutions
-- No paid ads unless budget allows and user specifically asks
-- No complex tools or software subscriptions
-- No hiring external help (agencies, freelancers, consultants)
+        if intent_mode == 'CONTENT':
+            system_prompt = f"""You are an AI Business Growth Content Assistant.
+Help create social media post content and AI image prompts ONLY via strict human-approval.
+
+BUSINESS: {business_type}, Goal: {goal}, Budget: {budget}
+
+RULES:
+1. NO automatic images.
+2. Generate post text FIRST.
+3. WAIT for approval before image prompts.
+4. Suggestions must be simple/realistic for small business.
+
+STEP 1: POST CONTENT
+Format:
+POST IDEA: [Details]
+CAPTION: [Hook/Body/CTA]
+HASHTAGS: [5-8]
+IMAGE DESCRIPTION (TEXT): [Human description]
+
+Ask: "Do you approve this post? (Yes / Edit / Reject)"
+
+STEP 2: IMAGE PROMPT (ONLY AFTER "YES/APPROVE")
+Output ONLY:
+IMAGE PROMPT: [Photorealistic, 4:5, minimalist]
+NEGATIVE PROMPT: [Blurry, text, logos]
 """
+        else:
+            system_prompt = f"""You are an AI Business Growth Assistant.
+Goal: {goal}, Budget: {budget}, Business: {business_type}
+Suggest 3-5 simple, free/low-cost actions in bullet points.
+Friendly, non-technical language.
+"""
+
+        # Since version is 0.3.2, we don't have system_instruction.
+        # We prepend it to the first message or the current one.
+        model = genai.GenerativeModel('gemini-2.5-flash') # Use gemini-pro for stability on old versions
         
-        # Create a prompt optimized for small business growth
-        system_prompt = f"""You are an AI Business Growth Assistant designed specifically for small and non-technical business owners.
-
-TASK MODE: {intent_mode}
-
-TASK OBJECTIVE:
-{intent_objective}
-
-TASK GUIDELINES:
-{intent_guidelines}
-
-BUSINESS CONTEXT:
-- Business Type: {business_type}
-- Primary Goal: {goal}
-- Monthly Budget: {budget}
-- Daily Time Availability: {time_per_day}
-- Team Size: {team_size}
-- Skill Level: Beginner
-
-STRICT CONSTRAINT ENFORCEMENT:
-The suggestions you generate MUST respect the following rules exactly.
-Do not suggest actions that violate these rules.
-{constraint_rules}
-
-If any user request conflicts with these constraints:
-- Politely refuse that part
-- Suggest a simpler alternative
-- Explain briefly why
-
-RESPONSE RULES:
-- Use bullet points only.
-- Maximum 6 bullet points.
-- One clear action per bullet.
-- Avoid guarantees, promises, or timelines.
-- Always assume manual review before execution.
-- If uncertain, say: "This step requires manual review."
-
-STRICT BEHAVIOR RULES:
-- Suggest ONLY actions that this specific business owner can realistically do alone
-- Assume limited time, budget, and technical skills
-- Do NOT assume access to marketing agencies, teams, freelancers, or consultants
-- Avoid advanced strategies, automation, funnels, integrations, or complex tools
-- Never make financial guarantees or exaggerated claims
-- Keep instructions short, clear, and step-by-step
-- Prefer low-effort, low-cost, ethical actions
-- The AI only suggests ideas; the human must review and execute them
-
-COMMUNICATION STYLE:
-- Friendly, supportive, and non-technical
-- Use plain language, no jargon
-- Be realistic and honest about what's achievable
-- Encourage consistency over perfection
-
-CORE PRINCIPLE:
-"AI suggests only what this specific user can realistically execute given their constraints."""
-
-        full_prompt = f"{system_prompt}\n\nUSER REQUEST:\n{user_message}\n\nProvide actionable advice in bullet point format that respects all constraints above:"
+        # Build the prompt with history
+        full_query = f"{system_prompt}\n\n"
+        for msg in history:
+            prefix = "User: " if msg['type'] == 'user' else "AI: "
+            full_query += f"{prefix}{msg['text']}\n"
         
-        # Initialize the model
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        full_query += f"User: {user_message}\nAI:"
         
-        # Generate content
-        response = model.generate_content(full_prompt)
-        
-        # Extract the text response
+        response = model.generate_content(full_query)
         generated_text = response.text
         
         return jsonify({
@@ -139,10 +105,7 @@ CORE PRINCIPLE:
             'message': generated_text,
             'context_used': {
                 'business_type': business_type,
-                'budget': budget,
-                'time_per_day': time_per_day,
-                'team_size': team_size,
-                'goal': goal
+                'intent_mode': intent_mode
             }
         })
         
