@@ -8,7 +8,7 @@ const Content = () => {
     {
       id: 1,
       type: 'ai',
-      text: "👋 Hi! I'm your AI Content Assistant. Tell me what kind of content you want to create today."
+      text: "👋 Hi! I'm your AI Business Growth Assistant. I help small business owners like you grow with simple, realistic actions you can do yourself. What would you like help with today?"
     }
   ])
   const [inputValue, setInputValue] = useState('')
@@ -118,9 +118,9 @@ const Content = () => {
         <Sidebar showTitle={true} />
         <main className="content-main">
           <section className="content-header">
-            <h1>AI Content Assistant</h1>
+            <h1>AI Business Growth Assistant</h1>
             <p>
-              Generate captions, ideas, hashtags, and stories tailored to your business.
+              Get simple, realistic advice to grow your business - no complex strategies or expensive tools required.
             </p>
           </section>
 
@@ -151,7 +151,7 @@ const Content = () => {
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Ask the AI to generate content, captions, ideas..."
+                placeholder="Ask for simple marketing ideas, content suggestions, customer tips..."
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
