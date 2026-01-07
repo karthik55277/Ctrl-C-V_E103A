@@ -160,6 +160,7 @@ const Dashboard = () => {
               <Link to="/content" className="action-card">✍️ Generate Content</Link>
               <Link to="/engagement" className="action-card">💬 Reply Suggestions</Link>
               <Link to="/fundraising" className="action-card">🤝 Create Funding Pitch</Link>
+              <Link to="/image-assistant" className="action-card">🖼️ AI Image Content</Link>
             </div>
           </section>
         </main>

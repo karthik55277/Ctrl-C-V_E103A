@@ -1,0 +1,197 @@
+.image-assistant-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #e5e7eb;
+}
+
+.assistant-header {
+    margin-bottom: 2rem;
+}
+
+.assistant-header h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, #22c55e, #38bdf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.module-card {
+    background: #111827;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.input-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #38bdf8;
+}
+
+.business-input {
+    width: 100%;
+    background: #020617;
+    border: 1px solid #374151;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    color: #e5e7eb;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 120px;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s ease;
+}
+
+.business-input:focus {
+    outline: none;
+    border-color: #22c55e;
+}
+
+.action-btn {
+    background: #22c55e;
+    color: #020617;
+    padding: 0.75rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.step-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.content-preview {
+    background: #020617;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #22c55e;
+}
+
+.approval-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-approve {
+    background: #22c55e;
+    color: #020617;
+}
+
+.btn-edit {
+    background: transparent;
+    border: 1px solid #38bdf8;
+    color: #38bdf8;
+}
+
+.btn-reject {
+    background: transparent;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+
+.locked-section {
+    position: relative;
+    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
+.locked-section.unlocked {
+    opacity: 1;
+    pointer-events: auto;
+    filter: none;
+}
+
+.lock-overlay {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: #1f2937;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
+}
+
+.prompt-output {
+    margin-top: 1.5rem;
+}
+
+.prompt-box {
+    background: #020617;
+    border: 1px dashed #374151;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.prompt-box h4 {
+    color: #38bdf8;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+.prompt-text {
+    font-family: 'Mono', monospace;
+    font-size: 0.9375rem;
+    color: #d1d5db;
+}
+
+/* Scrollbar adaptation for the page content if it overflows */
+.image-assistant-page::-webkit-scrollbar {
+    width: 10px;
+}
+
+.image-assistant-page::-webkit-scrollbar-track {
+    background: #020617;
+}
+
+.image-assistant-page::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 10px;
+    border: 2px solid #020617;
+}
+
+@media (max-width: 768px) {
+    .image-assistant-page {
+        padding: 1rem;
+    }
+
+    .assistant-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .approval-actions button {
+        width: 100%;
+    }
+}

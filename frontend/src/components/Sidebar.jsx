@@ -12,6 +12,7 @@ const Sidebar = ({ showTitle = true, title = 'AI Modules' }) => {
     { path: '/engagement', icon: '💬', label: 'Engagement' },
     { path: '/performance', icon: '📈', label: 'Performance' },
     { path: '/fundraising', icon: '🤝', label: 'Fundraising' },
+    { path: '/image-assistant', icon: '🖼️', label: 'Image Assistant' },
   ]
 
   return (

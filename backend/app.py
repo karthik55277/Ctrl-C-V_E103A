@@ -10,6 +10,10 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+# Register New Modular Features
+from image_assistant_routes import image_assistant_bp
+app.register_blueprint(image_assistant_bp)
+
 # Configure Gemini API
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 if GEMINI_API_KEY:
