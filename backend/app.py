@@ -3,12 +3,46 @@ from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
+import sqlite3
+from datetime import datetime
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key')
+
+# Token serializer (stateless token with expiry handled on load)
+serializer = URLSafeTimedSerializer(app.secret_key, salt='auth-token')
+
+# Simple SQLite DB setup for users (file: backend/auth.db)
+DB_PATH = os.path.join(os.path.dirname(__file__), 'auth.db')
+
+def get_db_connection():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def init_db():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
+            email TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+# initialize DB on startup
+init_db()
 
 # Configure Gemini API
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
@@ -24,6 +58,91 @@ def health():
         'status': 'ok',
         'gemini_configured': GEMINI_API_KEY is not None
     })
+
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    data = request.json or {}
+    name = data.get('name', '').strip()
+    email = (data.get('email') or '').strip().lower()
+    password = data.get('password', '')
+
+    if not name or not email or not password:
+        return jsonify({'error': 'name, email and password are required'}), 400
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    # check existing
+    cur.execute('SELECT id FROM users WHERE email = ?', (email,))
+    if cur.fetchone():
+        conn.close()
+        return jsonify({'error': 'Email already registered'}), 400
+
+    pw_hash = generate_password_hash(password)
+    created_at = datetime.utcnow().isoformat()
+    cur.execute('INSERT INTO users (name, email, password_hash, created_at) VALUES (?,?,?,?)',
+                (name, email, pw_hash, created_at))
+    conn.commit()
+    conn.close()
+
+    token = serializer.dumps({'email': email})
+    return jsonify({'success': True, 'token': token, 'user': {'name': name, 'email': email}}), 201
+
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.json or {}
+    email = (data.get('email') or '').strip().lower()
+    password = data.get('password', '')
+
+    if not email or not password:
+        return jsonify({'error': 'email and password required'}), 400
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT id, name, email, password_hash FROM users WHERE email = ?', (email,))
+    row = cur.fetchone()
+    conn.close()
+
+    if not row:
+        return jsonify({'error': 'Invalid credentials'}), 401
+
+    if not check_password_hash(row['password_hash'], password):
+        return jsonify({'error': 'Invalid credentials'}), 401
+
+    token = serializer.dumps({'email': row['email']})
+    return jsonify({'success': True, 'token': token, 'user': {'name': row['name'], 'email': row['email']}})
+
+
+@app.route('/api/me', methods=['GET'])
+def me():
+    auth = request.headers.get('Authorization', '')
+    if auth.startswith('Bearer '):
+        token = auth.split(' ', 1)[1]
+    else:
+        token = request.args.get('token')
+
+    if not token:
+        return jsonify({'error': 'Missing token'}), 401
+
+    try:
+        payload = serializer.loads(token, max_age=24*3600)  # 24 hours
+    except SignatureExpired:
+        return jsonify({'error': 'Token expired'}), 401
+    except BadSignature:
+        return jsonify({'error': 'Invalid token'}), 401
+
+    email = payload.get('email')
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT id, name, email, created_at FROM users WHERE email = ?', (email,))
+    row = cur.fetchone()
+    conn.close()
+
+    if not row:
+        return jsonify({'error': 'User not found'}), 404
+
+    return jsonify({'user': {'id': row['id'], 'name': row['name'], 'email': row['email'], 'created_at': row['created_at']}})
 
 @app.route('/api/generate-content', methods=['POST'])
 def generate_content():

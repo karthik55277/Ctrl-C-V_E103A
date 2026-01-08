@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import Onboarding from './pages/Onboarding'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 import Growth from './pages/Growth'
 import Content from './pages/Content'
 import Engagement from './pages/Engagement'
@@ -16,6 +18,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/growth" element={<Growth />} />
         <Route path="/content" element={<Content />} />
         <Route path="/engagement" element={<Engagement />} />

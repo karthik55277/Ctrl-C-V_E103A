@@ -13,7 +13,8 @@ const Navbar = () => {
         <li><a href="#modules">Modules</a></li>
         <li><Link to="/dashboard">Dashboard</Link></li>
         <li><a href="#fundraising">Fundraising</a></li>
-        <li><Link to="/onboarding" className="btn-nav">Get Started</Link></li>
+        <li><Link to="/login">Login</Link></li>
+        <li><Link to="/signup" className="btn-nav">Sign Up</Link></li>
       </ul>
     </nav>
   )
